@@ -7,7 +7,7 @@ A AI-based story writer Python library which uses OpenAI's [chatGPT](https://cha
 
 ## Usage
 
-There is a high-level API available, which generates PDFs from prompts (e.g. the stories presented in the teaser above were produced using [this notebook]()):
+There is a high-level API available, which generates PDFs from prompts (e.g. the stories presented in the teaser above were produced using [this notebook](https://github.com/haesleinhuepf/story-writer/blob/main/docs/demo.ipynb)):
 
 ```python
 from story_writer import generate_story
@@ -15,7 +15,7 @@ generate_story("cat_story.pdf", "a story about a cat that is walking on a street
 ```
 
 And there is a low-level API available, which generates a story and an image separately. 
-You can learn more about the low-level API in [this notebook]().
+You can learn more about the low-level API in [this notebook](https://github.com/haesleinhuepf/story-writer/blob/main/docs/story_building.ipynb).
 
 ## Installation
 
@@ -24,6 +24,8 @@ You can install story-writer using pip:
 ```commandline
 pip install story-writer
 ```
+
+You also need to create an OpenAI API Key and add it to your environment variables as explained on [this page](https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety).
 
 ## Development
 
