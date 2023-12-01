@@ -1,0 +1,6 @@
+reportlab
+openai
+scikit-image
+numpy
+
+

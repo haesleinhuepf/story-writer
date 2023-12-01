@@ -1,0 +1,17 @@
+
+.idea/bia-bob.iml
+
+build/
+dist/
+.idea/
+
+**/.ipynb_checkpoints/*
+*/bia_bob.egg-info/*
+*/bia_tischi.egg-info/*
+*__pycache__*
+
+*Untitled*
+deploy.bat
+
+*.egg-info/
+
