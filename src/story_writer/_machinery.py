@@ -39,10 +39,13 @@ def generate_story(pdf_filename, outline, num_sentences=10, language='English', 
 
     os.remove(temp_file)
 
-def create_story_prompt(outline, num_sentences=10, language='English', target_audience='12-year old kids'):
+def create_story_prompt(outline, num_sentences=7, language='English', target_audience='12-year old kids'):
     """Creates a story prompt from the given outline, specified length, language and target audience."""
     request = f"""
-    Write a {num_sentences} sentence story in {language} language for {target_audience} about: 
+    Write a {num_sentences} sentence story in {language} language for {target_audience}. 
+    The story should be a little bit funny and in general written with a positive mood.
+    
+    The is the rough content of the story:
     {outline}
     """
 
@@ -52,8 +55,13 @@ def create_story_prompt(outline, num_sentences=10, language='English', target_au
 def create_image_prompt(story, image_type="comic strip"):
     """Creates an image prompt from the given story."""
     return f"""
-Draw a {image_type} about the following story:
+Draw a {image_type} about the following story. 
+The {image_type} should show realistic looking actors and be consistent from panel to panel.
+The general mood of the {image_type} is positive.
+Keep it simple. Draw at maximum four panels.
+Use minimal text if necessary.
 
+This is the story:
 {story}
 """
 
