@@ -5,11 +5,21 @@ def package_story(pdf_filename, title, story, image_filename, story_prompt, imag
 
 {story}
 
-![]({image_filename})
 """
 
-    if story_prompt is not None and image_prompt is not None:
+    if image_filename is not None:
         pdf_content = pdf_content + f"""
+![]({image_filename})
+
+"""
+
+    pdf_content = pdf_content + f"""
+    Disclaimer: This story has been auto-generated using artificial intelligence. Any resemblance to real persons, living or dead, or actual places or events is purely coincidental and unintentional. Read the documentation of the story-writer Python library to learn more: https://github.com/haesleinhuepf/story-writer
+    """
+
+    if story_prompt is not None:
+        pdf_content = pdf_content + f"""
+
 PAGE_BREAK
 
 ## How it works
@@ -20,15 +30,17 @@ We used your short story notes as a prompt:
 {story_prompt}
 ```
 
-Then, we used this story to ask chatGPT for an image using this prompt:
+
+"""
+
+    if image_prompt is not None:
+        pdf_content = pdf_content + f"""
+Then, we asked Dall-E for an image using this prompt:
 
 ```
 {image_prompt}
 ```
 
-"""
-    pdf_content = pdf_content + f"""
-Disclaimer: This story has been auto-generated using artificial intelligence. Any resemblance to real persons, living or dead, or actual places or events is purely coincidental and unintentional. Read the documentation of the story-writer Python library to learn more: https://github.com/haesleinhuepf/story-writer
 """
 
     make_pdf(pdf_filename, pdf_content)

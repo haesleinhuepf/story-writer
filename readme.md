@@ -1,11 +1,22 @@
 # Story writer
 
-A AI-based story writer Python library which uses OpenAI's [chatGPT](https://chat.openai.com/) and [Dall-E](https://openai.com/dall-e-2) to generate PDFs with a story and a picture from a prompt and writes them into a PDF.
+A AI-based story writer and Python library which uses OpenAI's [chatGPT](https://chat.openai.com/) and [Dall-E](https://openai.com/dall-e-2) to generate PDFs with a story and a picture from a prompt and writes them into a PDF.
 
-<a href="https://github.com/haesleinhuepf/story-writer/blob/main/docs/images/teaser1.png"><img src="docs/images/teaser1.png" width="240"/></a>
-<a href="https://github.com/haesleinhuepf/story-writer/blob/main/docs/images/teaser2.png"><img src="docs/images/teaser2.png" width="240"/></a>
+<a href="https://github.com/haesleinhuepf/story-writer/blob/main/docs/images/teaser1.png"><img src="https://github.com/haesleinhuepf/story-writer/blob/main/docs/images/teaser1.png" width="240"/></a>
+<a href="https://github.com/haesleinhuepf/story-writer/blob/main/docs/images/teaser2.png"><img src="https://github.com/haesleinhuepf/story-writer/blob/main/docs/images/teaser2.png" width="240"/></a>
 
-## Usage
+## Usage: Streamlit app
+
+You can try the streamlit app by installing [streamlit](https://streamlit.io/) and running this terminal command:
+
+```commandline
+story-writer
+```
+
+![img.png](https://github.com/haesleinhuepf/story-writer/blob/main/docs/images/streamlit_screenshot.png)
+
+
+## Usage: Python
 
 There is a high-level API available, which generates PDFs from prompts (e.g. the stories presented in the teaser above were produced using [this notebook](https://github.com/haesleinhuepf/story-writer/blob/main/docs/demo.ipynb)):
 
