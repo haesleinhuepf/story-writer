@@ -99,8 +99,6 @@ def streamlit_app():
             if create_image:
                 image, image_prompt = compute_image(story)
 
-                print("hello world")
-
                 left_co, cent_co, last_co = st.columns([1,3,1])
                 with cent_co:
                     st.image(image, caption=title, width=600)
