@@ -1,6 +1,6 @@
 # Story writer
 
-An AI-based story writer and Python library which uses OpenAI's [chatGPT](https://chat.openai.com/) and [Dall-E](https://openai.com/dall-e-2) to generate PDFs with a story and a picture from a prompt and writes them into a PDF.
+An AI-based story writer and Python library which uses OpenAI's [chatGPT](https://chat.openai.com/) and [Dall-E](https://openai.com/dall-e-2) to generate PDFs with a story and a picture from a prompt.
 
 <a href="https://github.com/haesleinhuepf/story-writer/blob/main/docs/images/teaser1.png"><img src="https://github.com/haesleinhuepf/story-writer/blob/main/docs/images/teaser1.png" width="240"/></a>
 <a href="https://github.com/haesleinhuepf/story-writer/blob/main/docs/images/teaser2.png"><img src="https://github.com/haesleinhuepf/story-writer/blob/main/docs/images/teaser2.png" width="240"/></a>
