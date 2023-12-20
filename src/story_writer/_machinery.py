@@ -1,3 +1,4 @@
+import torch
 
 def generate_story(pdf_filename, outline, num_sentences=10, language='English', target_audience='12-year old kids', model='gpt-4-1106-preview', image_model='dall-e-3', explain_how_its_made=False):
 
@@ -91,6 +92,38 @@ def prompt(user_prompt, system_prompt="", model="gpt-4-1106-preview"):
 
 def draw_image(prompt, size_str="1024x1024", model='dall-e-3'):
     """Draws an image from the given prompt."""
+    if model.startswith("dall-e"):
+        return draw_dall_e_image(prompt, size_str, model)
+    else:
+        return draw_stable_diffusion_image(prompt, "512x512", model)
+
+def draw_stable_diffusion_image(prompt, size_str="512x512", model="stabilityai/stable-diffusion-2-1-base"):
+
+    import numpy as np
+    import stackview
+    from diffusers import DiffusionPipeline
+
+    size = [int(s) for s in size_str.split("x")]
+    width = size[0]
+    height = size[1]
+
+    pipe = DiffusionPipeline.from_pretrained(
+        model, torch_dtype=torch.float16
+    )
+    pipe = pipe.to("cuda")
+    image = pipe(prompt,
+                 width=width,
+                 height=height
+                 ).images[0]
+
+    image_np = np.array(image)
+
+    torch.cuda.empty_cache()
+
+    return image_np
+
+
+def draw_dall_e_image(prompt, size_str="1024x1024", model='dall-e-3'):
     from openai import OpenAI
 
     num_images=1

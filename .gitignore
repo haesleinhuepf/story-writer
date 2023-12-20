@@ -15,4 +15,4 @@ deploy.bat
 
 *.egg-info/
 
-docs/temp.jpg
+*temp*

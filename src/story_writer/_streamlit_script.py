@@ -32,10 +32,8 @@ def compute_story(outline, num_sentences, target_audience, language, useless_num
     return story, title, story_prompt
 
 @st.cache_resource
-def compute_image(story):
+def compute_image(story, image_model="dall-e-3"):
     from story_writer import create_image_prompt, draw_image, package_story
-
-    image_model = "dall-e-3"
 
     # Generate image
     image_prompt = create_image_prompt(story)
@@ -78,6 +76,8 @@ def streamlit_app():
         #st.text_input("Language:", "English")
 
         create_image = st.checkbox("Create image")
+        image_model = st.selectbox("Image generation model:", ["dall-e-2", "dall-e-3", "stabilityai/stable-diffusion-2-1-base"])
+
         explain = st.checkbox("Explain how it's made")
 
         ok_button = st.button("Create story")
@@ -97,7 +97,7 @@ def streamlit_app():
             st.markdown(story)
 
             if create_image:
-                image, image_prompt = compute_image(story)
+                image, image_prompt = compute_image(story, image_model)
 
                 left_co, cent_co, last_co = st.columns([1,3,1])
                 with cent_co:
