@@ -36,9 +36,12 @@ def generate_story(pdf_filename, outline, num_sentences=10, language='English', 
                   story=story,
                   image_filename=temp_file,
                   story_prompt=story_prompt,
-                  image_prompt=image_prompt)
+                  image_prompt=image_prompt,
+                  text_model=model,
+                  image_model=image_model)
 
     os.remove(temp_file)
+
 
 def create_story_prompt(outline, num_sentences=7, language='English', target_audience='12-year old kids'):
     """Creates a story prompt from the given outline, specified length, language and target audience."""
@@ -53,17 +56,18 @@ def create_story_prompt(outline, num_sentences=7, language='English', target_aud
     return request
 
 
-def create_image_prompt(story, image_type="comic strip"):
+def create_image_prompt(story, image_type="picture"):
     """Creates an image prompt from the given story."""
     return f"""
 Draw a {image_type} about the following story. 
-The {image_type} should show realistic looking actors and be consistent from panel to panel.
+The {image_type} should show realistic looking actors.
 The general mood of the {image_type} is positive.
-Keep it simple. Draw at maximum four panels.
-Use minimal text if necessary.
+Do not write any text or speech bubbles into the {image_type}.
 
 This is the story:
 {story}
+
+Again, keep in mind that the {image_type} should be realistic looking, contain no text, and the general mood should be positive.
 """
 
 
@@ -71,6 +75,56 @@ def prompt(user_prompt, system_prompt="", model="gpt-4-1106-preview"):
     """A prompt helper function that sends a message to openAI
     and returns only the text response.
     """
+    print("Text generation model:", model)
+    if model.startswith("gemini"):
+        return prompt_vertexai(user_prompt, system_prompt, model)
+    elif model.startswith("gpt"):
+        return prompt_openai(user_prompt, system_prompt, model)
+    else:
+        return prompt_huggingface(user_prompt, system_prompt, model)
+
+
+def prompt_huggingface(user_prompt, system_prompt, model="facebook/opt-1.3b"):
+    from transformers import pipeline
+
+    my_prompt = f"""
+               {system_prompt}
+
+               {user_prompt}
+               """
+
+    generator = pipeline('text-generation', model=model)
+    response = generator(my_prompt)
+
+    return response
+
+
+def prompt_vertexai(user_prompt, system_prompt, model="gemini-pro"):
+
+    from vertexai.preview.generative_models import (
+        GenerationConfig,
+        GenerativeModel,
+        Image,
+        Part,
+        ChatSession,
+    )
+
+    my_prompt = f"""
+           {system_prompt}
+
+           # Task
+           This is the task:
+           {user_prompt}
+           """
+
+    client = GenerativeModel(model)
+
+    response = client.generate_content(my_prompt).text
+
+    return response
+
+
+def prompt_openai(user_prompt, system_prompt, model="gpt-4-1106-preview"):
     from openai import OpenAI
 
     # assemble prompt
@@ -92,15 +146,72 @@ def prompt(user_prompt, system_prompt="", model="gpt-4-1106-preview"):
 
 def draw_image(prompt, size_str="1024x1024", model='dall-e-3'):
     """Draws an image from the given prompt."""
+    print("Image generation model", model)
     if model.startswith("dall-e"):
         return draw_dall_e_image(prompt, size_str, model)
+    elif model.startswith("google"):
+        return draw_google_image(prompt, size_str, model)
     else:
         return draw_stable_diffusion_image(prompt, "512x512", model)
+
+
+def draw_google_image(prompt, size_str, model):
+
+    # modified from: https://codelabs.developers.google.com/generate_creatives_google_ads#5
+
+    import requests
+    import json
+    import base64
+    import os
+    from skimage.io import imread
+    import io
+
+    image_count = 1
+
+    access_token = os.getenv('GCLOUD_API_KEY')
+    project_id = os.getenv('GCLOUD_PPROJECT_ID')
+
+    url = f"https://us-central1-aiplatform.googleapis.com/v1/projects/{project_id}/locations/us-central1/publishers/google/models/imagegeneration:predict"
+
+    headers = {
+        "Authorization": f"Bearer {access_token}",
+        "Content-Type": "application/json; charset=utf-8"
+    }
+
+    data = {
+        "instances": [
+            {
+                "prompt": prompt
+            }
+        ],
+        "parameters": {
+            "sampleCount": image_count
+        }
+    }
+
+    response = requests.post(url, headers=headers, data=json.dumps(data))
+
+    if response.status_code == 200:
+        response_data = response.json()
+
+        for prediction in response_data.get('predictions', []):
+            image_data = base64.b64decode(prediction['bytesBase64Encoded'])
+
+    else:
+        raise RuntimeError("Request failed:", response.status_code, response.text)
+
+    # Convert to a binary stream
+    png_stream = io.BytesIO(image_data)
+
+    # Read the image file into a numpy array
+    image_array = imread(png_stream, plugin='imageio')
+
+    return image_array
+
 
 def draw_stable_diffusion_image(prompt, size_str="512x512", model="stabilityai/stable-diffusion-2-1-base"):
 
     import numpy as np
-    import stackview
     from diffusers import DiffusionPipeline
 
     size = [int(s) for s in size_str.split("x")]
@@ -136,6 +247,7 @@ def draw_dall_e_image(prompt, size_str="1024x1024", model='dall-e-3'):
       size=size_str
     )
     return images_from_url_responses(response)
+
 
 def images_from_url_responses(response, input_shape = None):
     """Turns a list of OpenAI's URL responses into numpy images"""

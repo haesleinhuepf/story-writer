@@ -1,4 +1,4 @@
-def package_story(pdf_filename, title, story, image_filename, story_prompt, image_prompt):
+def package_story(pdf_filename, title, story, image_filename, story_prompt, image_prompt, text_model, image_model):
     """Packages the story into a PDF file."""
     pdf_content = f"""
 # {title}
@@ -24,7 +24,7 @@ PAGE_BREAK
 
 ## How it works
 
-We used your short story notes as a prompt:
+We used your short story notes as a prompt for {text_model}:
 
 ```
 {story_prompt}
@@ -35,7 +35,7 @@ We used your short story notes as a prompt:
 
     if image_prompt is not None:
         pdf_content = pdf_content + f"""
-Then, we asked Dall-E for an image using this prompt:
+Then, we asked {image_model} for an image using this prompt:
 
 ```
 {image_prompt}
