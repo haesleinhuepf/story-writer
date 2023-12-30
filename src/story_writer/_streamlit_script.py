@@ -30,11 +30,11 @@ def compute_story(outline, num_sentences, target_audience, language, model= "gpt
     return story, title, story_prompt
 
 @st.cache_resource
-def compute_image(story, image_model="dall-e-3"):
+def compute_image(story, image_model="dall-e-3", image_type="picture"):
     from story_writer import create_image_prompt, draw_image, package_story
 
     # Generate image
-    image_prompt = create_image_prompt(story)
+    image_prompt = create_image_prompt(story, image_type=image_type)
     image = draw_image(image_prompt, model=image_model)
 
     return image, image_prompt
@@ -66,9 +66,9 @@ def streamlit_app():
         st.title("Story writer")
         st.write("Let AI write you a story.")
 
-        outline = st.text_area("Short story content:", "Cat meets mouse")
+        outline = st.text_area("Short story content:", "A student in their first semester explores the university and finds a treasure")
         num_sentences = st.number_input("Story length (in sentences):", min_value=3, max_value=100, value=7)
-        target_audience = st.text_input("Target audience:", "12-year old kids")
+        target_audience = st.text_input("Target audience:", "young adults")
         language = st.selectbox("Language:", ["English", "German", "French", "Klingon"])
 
         #st.text_input("Language:", "English")
@@ -84,7 +84,10 @@ def streamlit_app():
                                    ["gpt-4-1106-preview", "gemini-pro"])
 
         image_model = st.selectbox("Image generation model:",
-                                   ["dall-e-2", "dall-e-3", "stabilityai/stable-diffusion-2-1-base", "google/imagen"])
+                                   ["dall-e-3", "stabilityai/stable-diffusion-2-1-base", "google/imagen"])
+
+        image_type = st.selectbox("Image type:",
+                                   ["picture", "comic", "comic-strip", "scribble"])
 
         cache_seed = st.number_input("Cache seed:", min_value=0, max_value=1000000, value=42)
 
@@ -101,7 +104,7 @@ def streamlit_app():
             st.markdown(story)
 
             if create_image:
-                image, image_prompt = compute_image(story, image_model)
+                image, image_prompt = compute_image(story, image_model=image_model, image_type=image_type)
 
                 left_co, cent_co, last_co = st.columns([1,3,1])
                 with cent_co:
