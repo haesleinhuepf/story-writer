@@ -168,8 +168,18 @@ def draw_google_image(prompt, size_str, model):
 
     image_count = 1
 
-    access_token = os.getenv('GCLOUD_API_KEY')
+    import os
+
+    # retrieve google-cloud access token
+    command = "gcloud auth print-access-token"
+    process = os.popen(command)
+    access_token = process.read().strip("\n")
+    process.close()
+
+    # access_token = os.getenv('GCLOUD_API_KEY')
     project_id = os.getenv('GCLOUD_PPROJECT_ID')
+
+    print("token", access_token)
 
     url = f"https://us-central1-aiplatform.googleapis.com/v1/projects/{project_id}/locations/us-central1/publishers/google/models/imagegeneration:predict"
 
