@@ -85,10 +85,11 @@ def streamlit_app():
                                    ["gpt-4-1106-preview", "gemini-pro"])
 
         image_model = st.selectbox(translate("Image generation model:"),
-                                   ["dall-e-3", "stabilityai/stable-diffusion-2-1-base", "google/imagen"])
+                                   ["dall-e-3", "stabilityai/stable-diffusion-2-1-base", "runwayml/stable-diffusion-v1-5"])
+                                       #, "google/imagen"
 
         image_type = st.selectbox(translate("Image type:"),
-                                   ["picture", "comic", "comic-strip", "scribble"])
+                                   ["picture", "photo", "comic", "comic-strip", "scribble"])
 
         cache_seed = st.number_input("Random number:", min_value=0, max_value=1000000, value=42)
 
