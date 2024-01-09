@@ -4,6 +4,7 @@ import sys
 
 import streamlit as st
 import story_writer
+from story_writer._locale import translate
 
 
 def main() -> None:
@@ -63,33 +64,33 @@ def streamlit_app():
 
     # User input fields in the left column
     with (col1):
-        st.title("Story writer")
-        st.write("Let AI write you a story.")
+        st.title(translate("AI Story writer"))
+        st.write(translate("Let AI write you a story."))
 
-        outline = st.text_area("Short story content:", "A student in their first semester explores the university and finds a treasure")
-        num_sentences = st.number_input("Story length (in sentences):", min_value=3, max_value=100, value=7)
-        target_audience = st.text_input("Target audience:", "young adults")
-        language = st.selectbox("Language:", ["English", "German", "French", "Klingon"])
+        outline = st.text_area(translate("Short story content:"), translate("A student in their first semester explores the university and finds a treasure"))
+        num_sentences = st.number_input(translate("Story length (in sentences):"), min_value=3, max_value=100, value=7)
+        target_audience = st.text_input(translate("Target audience:"), translate("young adults"))
+        language = st.selectbox(translate("Language:"), [ "German", "English", "French", "Klingon"])
 
         #st.text_input("Language:", "English")
 
-        create_image = st.checkbox("Create image")
-        explain = st.checkbox("Explain how it's made")
+        create_image = st.checkbox(translate("Generate image"), value=True)
+        explain = st.checkbox(translate("Explain how it's made"), value=True)
 
-        ok_button = st.button("Create story")
+        ok_button = st.button(translate("Generate story"))
 
-        st.markdown("## Advanced options")
+        st.markdown("## " + translate("Advanced options"))
 
-        text_model = st.selectbox("Text generation model:",
+        text_model = st.selectbox(translate("Text generation model:"),
                                    ["gpt-4-1106-preview", "gemini-pro"])
 
-        image_model = st.selectbox("Image generation model:",
+        image_model = st.selectbox(translate("Image generation model:"),
                                    ["dall-e-3", "stabilityai/stable-diffusion-2-1-base", "google/imagen"])
 
-        image_type = st.selectbox("Image type:",
+        image_type = st.selectbox(translate("Image type:"),
                                    ["picture", "comic", "comic-strip", "scribble"])
 
-        cache_seed = st.number_input("Cache seed:", min_value=0, max_value=1000000, value=42)
+        cache_seed = st.number_input("Random number:", min_value=0, max_value=1000000, value=42)
 
     # Display the output image in the right column
     with col2:
@@ -114,6 +115,7 @@ def streamlit_app():
                 image_prompt = None
 
             st.write("Disclaimer: This story has been auto-generated using artificial intelligence. Any resemblance to real persons, living or dead, or actual places or events is purely coincidental and unintentional. Read the documentation of the story-writer Python library to learn more: https://github.com/haesleinhuepf/story-writer")
+
 
             if explain:
                 st.text_area(f"The story was generated using the following prompt sent to {text_model}:", story_prompt)
