@@ -30,6 +30,20 @@ def compute_story(outline, num_sentences, target_audience, language, model= "gpt
 
     return story, title, story_prompt
 
+def random_outline(language='English', model="gpt-4-1106-preview"):
+    from story_writer import prompt
+
+    outline_prompt = f"""
+    Write a potentially funny one- or two-sentence story, where things and persons are replaced by place holders.
+    Write the story in the {language} language and also the place-holders.
+    Do not add any other explanatory text. Respond with just the story please.
+    Example 1: A <PERSON> walks into a <PLACE> and asks for a <THING>. Suddenly ...
+    Example 2: On a <WEATHER> day, <PERSON> decides for a walk. On its way they find a <THING>.
+    """
+
+    return prompt(outline_prompt, model=model)
+
+
 @st.cache_resource
 def compute_image(story, image_model="dall-e-3", image_type="picture"):
     from story_writer import create_image_prompt, draw_image, package_story
@@ -67,12 +81,18 @@ def streamlit_app():
         st.title(translate("AI Story writer"))
         st.write(translate("Let AI write you a story."))
 
-        outline = st.text_area(translate("Short story content:"), translate("A student in their first semester explores the university and finds a treasure"))
+        def randomize_outline():
+            print(language)
+            st.session_state.outline = random_outline(language=language, model=text_model)
+
+        outline = st.text_area(translate("Short story content:"), key='outline', height=200)
+
+        st.button(translate("Randomize"), on_click=randomize_outline)
+
+
         num_sentences = st.number_input(translate("Story length (in sentences):"), min_value=3, max_value=100, value=7)
         target_audience = st.text_input(translate("Target audience:"), translate("young adults"))
-        language = st.selectbox(translate("Language:"), [ "German", "English", "French", "Klingon"])
-
-        #st.text_input("Language:", "English")
+        language = st.selectbox(translate("Language:"), ["German", "English", "French", "Klingon"])
 
         create_image = st.checkbox(translate("Generate image"), value=True)
         explain = st.checkbox(translate("Explain how it's made"), value=True)
