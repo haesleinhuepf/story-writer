@@ -49,7 +49,7 @@ def create_story_prompt(outline, num_sentences=7, language='English', target_aud
     Write a {num_sentences} sentence story in {language} language for {target_audience}. 
     The story should be a little bit funny and in general written with a positive mood.
     
-    The is the rough content of the story:
+    This is the outline of the story:
     {outline}
     """
 
