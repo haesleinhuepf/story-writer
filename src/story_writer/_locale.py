@@ -1,4 +1,4 @@
-def translate(term, language='de'):
+def translate(term, language='en'):
 
     if language == 'en':
         return term

@@ -92,17 +92,17 @@ def streamlit_app():
 
         num_sentences = st.number_input(translate("Story length (in sentences):"), min_value=3, max_value=100, value=7)
         target_audience = st.text_input(translate("Target audience:"), translate("young adults"))
-        language = st.selectbox(translate("Language:"), ["German", "English", "French", "Klingon"])
+        language = st.selectbox(translate("Language:"), ["English", "German", "French", "Klingon"])
 
         create_image = st.checkbox(translate("Generate image"), value=True)
         explain = st.checkbox(translate("Explain how it's made"), value=True)
 
         ok_button = st.button(translate("Generate story"))
 
-        st.markdown("## " + translate("Advanced options"))
+        st.markdown("### " + translate("Advanced options"))
 
         text_model = st.selectbox(translate("Text generation model:"),
-                                   ["gpt-4-1106-preview", "gemini-pro"])
+                                   ["gpt-4-1106-preview", "gemini-pro", "llama2"])
 
         image_model = st.selectbox(translate("Image generation model:"),
                                    ["dall-e-3", "stabilityai/stable-diffusion-2-1-base", "runwayml/stable-diffusion-v1-5"])
