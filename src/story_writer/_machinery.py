@@ -81,22 +81,27 @@ def prompt(user_prompt, system_prompt="", model="gpt-4-1106-preview"):
     elif model.startswith("gpt"):
         return prompt_openai(user_prompt, system_prompt, model)
     else:
-        return prompt_huggingface(user_prompt, system_prompt, model)
+        return prompt_ollama(user_prompt, system_prompt, model)
 
 
-def prompt_huggingface(user_prompt, system_prompt, model="facebook/opt-1.3b"):
-    from transformers import pipeline
+def prompt_ollama(user_prompt, system_prompt, model="llama2"):
+    from openai import OpenAI
 
-    my_prompt = f"""
-               {system_prompt}
+    # assemble prompt
+    system_message = [{"role": "system", "content": system_prompt}]
+    user_message = [{"role": "user", "content": user_prompt}]
 
-               {user_prompt}
-               """
+    # init client
+    client = OpenAI(base_url='http://localhost:11434/v1', api_key="none")
 
-    generator = pipeline('text-generation', model=model)
-    response = generator(my_prompt)
+    # retrieve answer
+    response = client.chat.completions.create(
+        messages=system_message + user_message,
+        model=model
+    )
+    reply = response.choices[0].message.content
 
-    return response
+    return reply
 
 
 def prompt_vertexai(user_prompt, system_prompt, model="gemini-pro"):
